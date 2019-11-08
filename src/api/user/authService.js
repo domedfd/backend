@@ -27,7 +27,13 @@ const login = (req, res, next) => {
       const { name, email } = user;
       res.json({ name, email, token });
     } else {
-      return res.status(400).send({ errors: ["Usuario/Contrasena Ivalidos"] });
+      return res
+        .status(400)
+        .send({
+          errors: [
+            `Usuario/Contrasena Ivalidos user: ${user} passwd: ${password}`
+          ]
+        });
     }
   });
 };
