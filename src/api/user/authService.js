@@ -52,10 +52,7 @@ const signup = (req, res, next) => {
   if (!password.match(passwordRegex)) {
     return res.status(400).send({
       errors: [
-        `La contrasena ${password} la confirmacion de la contrasenha ${confirmPassword} ese e o salt ${bcrypt.hashSync(
-          password,
-          salt
-        )}`
+        `La contrasena ${password} la confirmacion de la contrasenha ${confirmPassword} ese e `
       ]
     });
   }
