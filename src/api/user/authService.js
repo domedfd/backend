@@ -27,13 +27,9 @@ const login = (req, res, next) => {
       const { name, email } = user;
       res.json({ name, email, token });
     } else {
-      return res
-        .status(400)
-        .send({
-          errors: [
-            `Usuario/Contrasena Ivalidos user: ${user} passwd: ${password}`
-          ]
-        });
+      return res.status(400).send({
+        errors: [`Usuario/Contrasena Ivalidos`]
+      });
     }
   });
 };
@@ -59,7 +55,7 @@ const signup = (req, res, next) => {
   if (!password.match(passwordRegex)) {
     return res.status(400).send({
       errors: [
-        `La contrasena ${password} la confirmacion de la contrasenha ${confirmPassword} ese e `
+        `La contrasena debe contener numeros, simbolos, letras mayusculas y minusculas`
       ]
     });
   }
