@@ -3,6 +3,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("./user");
 const env = require("../../.env");
+const errorHandler = require("../common/errorHandler");
+
+User.methods(["get", "post", "put", "delete"]);
+User.updateOptions({ new: true, runValidators: true });
+User.after("put", errorHandler);
 
 const emailRegex = /\S+@\S+\.\S+/;
 const passwordRegex = /((?=.*\d).{1,20})/; ///((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})/;
@@ -84,4 +89,37 @@ const signup = (req, res, next) => {
   });
 };
 
-module.exports = { login, signup, validateToken };
+const altera = (req, res, next) => {
+  const _id = req.body._id || "1";
+  const name = req.body.name || "1";
+  const email = req.body.email || "1";
+  const password = req.body.password || "1";
+  const confirmPassword = req.body.confirm_password || "1";
+
+  if (!email.match(emailRegex)) {
+    return res.status(400).send({ errors: ["El email informado es invalido"] });
+  }
+
+  if (!password.match(passwordRegex)) {
+    return res.status(400).send({
+      errors: [
+        `La contrasena debe contener numeros, simbolos, letras mayusculas y minusculas`
+      ]
+    });
+  }
+
+  const salt = bcrypt.genSaltSync();
+  const passwordHash = bcrypt.hashSync(password, salt);
+  if (!bcrypt.compareSync(confirmPassword, passwordHash)) {
+    return res.status(400).send({ errors: ["Contrasenas diferentes"] });
+  }
+  User.updateOne({ _id }, { name, password: passwordHash }, (error, value) => {
+    if (error) {
+      res.status(500).json({ errors: [error] });
+    } else {
+      return res.status(200).send("Alterado con exito!");
+    }
+  });
+};
+
+module.exports = { login, signup, validateToken, altera };

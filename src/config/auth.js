@@ -17,6 +17,7 @@ module.exports = (req, res, next) => {
         return res.status(403).send({
           errors: ["Failed to authenticate token."]
         });
+        // next();
       } else {
         // req.decoded = decoded;
         next();

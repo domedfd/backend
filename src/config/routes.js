@@ -13,6 +13,9 @@ module.exports = function(server) {
   const BillingCycle = require("../api/billingCycle/billingCycleService");
   BillingCycle.register(protectedApi, "/billingCycles");
 
+  const User = require("../api/user/userService");
+  User.register(protectedApi, "/user");
+
   /*
    * Rotas abertas
    */
@@ -20,7 +23,9 @@ module.exports = function(server) {
   server.use("/oapi", openApi);
 
   const AuthService = require("../api/user/authService");
+
   openApi.post("/login", AuthService.login);
   openApi.post("/signup", AuthService.signup);
+  openApi.put("/altera", AuthService.altera);
   openApi.post("/validateToken", AuthService.validateToken);
 };
