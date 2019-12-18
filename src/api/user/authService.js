@@ -52,7 +52,7 @@ const signup = (req, res, next) => {
   const email = req.body.email || "";
   const password = req.body.password || "";
   const confirmPassword = req.body.confirm_password || "";
-  const perfil = req.body.perfil || "";
+  const perfil = req.body.perfil || "USUARIO";
 
   if (!email.match(emailRegex)) {
     return res.status(400).send({ errors: ["El email informado es invalido"] });
