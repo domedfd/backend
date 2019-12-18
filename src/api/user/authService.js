@@ -29,8 +29,8 @@ const login = (req, res, next) => {
       const token = jwt.sign({ ...user }, env.authSecret, {
         expiresIn: "1 day"
       });
-      const { name, email } = user;
-      res.json({ name, email, token });
+      const { name, email, perfil } = user;
+      res.json({ name, email, token, perfil });
     } else {
       return res.status(400).send({
         errors: [`Usuario/Contrasena Ivalidos`]
@@ -52,6 +52,7 @@ const signup = (req, res, next) => {
   const email = req.body.email || "";
   const password = req.body.password || "";
   const confirmPassword = req.body.confirm_password || "";
+  const perfil = req.body.perfil || "";
 
   if (!email.match(emailRegex)) {
     return res.status(400).send({ errors: ["El email informado es invalido"] });
@@ -77,7 +78,7 @@ const signup = (req, res, next) => {
     } else if (user) {
       return res.status(400).send({ errors: ["Usuario existente"] });
     } else {
-      const newUser = new User({ name, email, password: passwordHash });
+      const newUser = new User({ name, email, password: passwordHash, perfil });
       newUser.save(err => {
         if (err) {
           return sendErrorsFromDB(res, err);
@@ -90,11 +91,12 @@ const signup = (req, res, next) => {
 };
 
 const altera = (req, res, next) => {
-  const _id = req.body._id || "1";
-  const name = req.body.name || "1";
-  const email = req.body.email || "1";
-  const password = req.body.password || "1";
-  const confirmPassword = req.body.confirm_password || "1";
+  const _id = req.body._id || "No asignado";
+  const name = req.body.name || "No asignado";
+  const email = req.body.email || "No asignado";
+  const password = req.body.password || "No asignado";
+  const confirmPassword = req.body.confirm_password || "No asignado";
+  const perfil = req.body.perfil || "No asignado";
 
   if (!email.match(emailRegex)) {
     return res.status(400).send({ errors: ["El email informado es invalido"] });
@@ -113,13 +115,17 @@ const altera = (req, res, next) => {
   if (!bcrypt.compareSync(confirmPassword, passwordHash)) {
     return res.status(400).send({ errors: ["Contrasenas diferentes"] });
   }
-  User.updateOne({ _id }, { name, password: passwordHash }, (error, value) => {
-    if (error) {
-      res.status(500).json({ errors: [error] });
-    } else {
-      return res.status(200).send("Alterado con exito!");
+  User.updateOne(
+    { _id },
+    { name, password: passwordHash, perfil },
+    (error, value) => {
+      if (error) {
+        res.status(500).json({ errors: [error] });
+      } else {
+        return res.status(200).send("Alterado con exito!");
+      }
     }
-  });
+  );
 };
 
 module.exports = { login, signup, validateToken, altera };
