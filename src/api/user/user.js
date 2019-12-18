@@ -9,8 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
     uppercase: true,
-    enum: ["ADMINISTRADOR", "USUARIO"],
-    default: "USUARIO"
+    enum: ["ADMINISTRADOR", "USUARIO"]
   }
 });
 
