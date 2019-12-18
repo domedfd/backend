@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
     uppercase: true,
-    enum: ["ADMINISTRADOR", "USER"]
+    enum: ["ADMINISTRADOR", "USUARIO"]
   }
 });
 
